@@ -1,23 +1,48 @@
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
-export const fetchContext = createContext();
+export const FetchContext = createContext();
 
-// function FetchProvider({ children }) {
-//   const [returnApi, saveFetch] = useState([]);
-//   const { makeFetch } = useFetch();
-//   useEffect(() => {
-//     const test = async () => {
-//       const results = await makeFetch('https://swapi.dev/api/planets');
-//       saveFetch(results);
-//     };
-//     test();
-//   }, []);
+function FetchProvider({ children }) {
+  const [isLoading, setisLoading] = useState(false);
+  const [resultsApi, setResults] = useState([]);
+  const [apiError, setError] = useState(null);
 
-//   return (
-//     <FetchProvider.Provider value={ returnApi }>
-//       { children }
-//     </FetchProvider.Provider>
-//   );
-// }
+  const fetchStarWarsApi = async () => {
+    setisLoading(true);
 
-// export default FetchProvider;
+    try {
+      const request = await fetch('https://swapi.dev/api/planets');
+
+      if (!request.ok) {
+        const json = await request.json();
+        throw json.message;
+      }
+
+      const returnApi = await request.json();
+      const { results } = returnApi;
+      setResults(results);
+    } catch (e) {
+      setError(e);
+    } finally {
+      setisLoading(false);
+    }
+  };
+
+  return (
+    <FetchContext.Provider
+      value={ { isLoading,
+        resultsApi,
+        apiError,
+        fetchStarWarsApi } }
+    >
+      { children }
+    </FetchContext.Provider>
+  );
+}
+
+FetchProvider.propTypes = {
+  children: PropTypes.string.isRequired,
+};
+
+export default FetchProvider;
