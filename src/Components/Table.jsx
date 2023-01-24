@@ -1,9 +1,11 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { FetchContext } from '../context/FetchContext';
 import '../Css/Table.css';
 
 function Table() {
   const { resultsApi, fetchStarWarsApi } = useContext(FetchContext);
+  // const [searchvalue, setSearch] = useState({ });
+  const [filteredSearch, setFilteredSearch] = useState({ search: '', filterSearch: '' });
   useEffect(() => {
     const test = async () => {
       await fetchStarWarsApi();
@@ -12,10 +14,28 @@ function Table() {
     test();
   }, []);
 
+  const handleSearch = (e) => {
+    setFilteredSearch({
+      ...filteredSearch,
+      search: e.target.value,
+      filterSearch: resultsApi.filter((results) => results.name.toLowerCase()
+        .includes(e.target.value.toLowerCase())),
+    });
+  };
+
+  const results = filteredSearch.filterSearch;
+
   return (
     <div>
+      <input
+        type="text"
+        data-testid="name-filter"
+        name="search"
+        onChange={ handleSearch }
+        value={ filteredSearch.search }
+      />
       <table>
-        <theaded>
+        <thead>
           <tr>
             <th>Name </th>
             <th>Rotation Period</th>
@@ -31,63 +51,119 @@ function Table() {
             <th>Edited</th>
             <th>URL</th>
           </tr>
-        </theaded>
+        </thead>
         <tbody>
           {
-            resultsApi.map((results) => (
-              <tr key={ results.name }>
+            !results ? resultsApi.map((filter) => (
+              <tr key={ filter.name } className="trHidden">
                 <td>
-                  { results.name }
+                  { filter.name }
                 </td>
 
                 <td>
-                  { results.rotation_period }
+                  { filter.rotation_period }
                 </td>
                 <td>
-                  { results.orbital_period }
-                </td>
-
-                <td>
-                  { results.diameter }
+                  { filter.orbital_period }
                 </td>
 
                 <td>
-                  { results.climate }
+                  { filter.diameter }
                 </td>
 
                 <td>
-                  { results.gravity }
+                  { filter.climate }
                 </td>
 
                 <td>
-                  { results.terrain }
+                  { filter.gravity }
                 </td>
 
                 <td>
-                  { results.surface_water }
+                  { filter.terrain }
                 </td>
 
                 <td>
-                  { results.population }
-                </td>
-
-                {/* <td>
-                  { results.rotation_period }
-                </td> */}
-
-                <td>
-                  { results.created }
+                  { filter.surface_water }
                 </td>
 
                 <td>
-                  { results.edited }
+                  { filter.population }
                 </td>
 
                 <td>
-                  { results.url }
+                  { filter.films.map((film) => film) }
+                </td>
+
+                <td>
+                  { filter.created }
+                </td>
+
+                <td>
+                  { filter.edited }
+                </td>
+
+                <td>
+                  { filter.url }
                 </td>
               </tr>
-            ))
+            )) : (
+
+              results.map((filter) => (
+                <tr key={ filter.name }>
+                  <td>
+                    { filter.name }
+                  </td>
+
+                  <td>
+                    { filter.rotation_period }
+                  </td>
+                  <td>
+                    { filter.orbital_period }
+                  </td>
+
+                  <td>
+                    { filter.diameter }
+                  </td>
+
+                  <td>
+                    { filter.climate }
+                  </td>
+
+                  <td>
+                    { filter.gravity }
+                  </td>
+
+                  <td>
+                    { filter.terrain }
+                  </td>
+
+                  <td>
+                    { filter.surface_water }
+                  </td>
+
+                  <td>
+                    { filter.population }
+                  </td>
+
+                  <td>
+                    { filter.films.map((film) => film) }
+                  </td>
+
+                  <td>
+                    { filter.created }
+                  </td>
+
+                  <td>
+                    { filter.edited }
+                  </td>
+
+                  <td>
+                    { filter.url }
+                  </td>
+                </tr>
+              )))
+
           }
         </tbody>
       </table>
