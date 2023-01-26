@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { FetchContext } from '../context/FetchContext';
 
 function Table() {
-  const { resultsApi, isLoading, planets, setPlanets } = useContext(FetchContext);
+  const { isLoading, planets, setPlanets } = useContext(FetchContext);
 
   const [inputSearch, setSearch] = useState('');
   const [filtered, setFilter] = useState({
@@ -15,7 +15,7 @@ function Table() {
 
   const handleAllInputs = () => {
     if (filtered.operator === 'menor que') {
-      const allResult = resultsApi
+      const allResult = planets.planet
         .filter((result) => +result[filtered.column]
         < +filtered.number);
       setPlanets({
@@ -23,7 +23,7 @@ function Table() {
       });
     } else if
     (filtered.operator === 'maior que') {
-      const allResult2 = resultsApi
+      const allResult2 = planets.planet
         .filter((result) => +result[filtered.column]
         > +filtered.number);
       setPlanets({
@@ -31,7 +31,7 @@ function Table() {
       });
     } else if
     (filtered.operator === 'igual a') {
-      const allResult3 = resultsApi
+      const allResult3 = planets.planet
         .filter((results) => +results[filtered.column]
         === +filtered.number);
       setPlanets({
@@ -46,7 +46,7 @@ function Table() {
         type="text"
         data-testid="name-filter"
         name="search"
-        value={ inputSearch }
+        // value={ filtered.search }
         onChange={ (e) => setSearch(e.target.value) }
       />
       <div>
