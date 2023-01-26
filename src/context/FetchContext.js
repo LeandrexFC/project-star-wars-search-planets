@@ -7,6 +7,7 @@ function FetchProvider({ children }) {
   const [isLoading, setisLoading] = useState(false);
   const [resultsApi, setResults] = useState([]);
   const [apiError, setError] = useState(null);
+  const [allInputFiltered, setInput] = useState({ input: [] });
 
   const fetchStarWarsApi = async () => {
     setisLoading(true);
@@ -22,6 +23,10 @@ function FetchProvider({ children }) {
       const returnApi = await request.json();
       const { results } = returnApi;
       setResults(results);
+      setInput({
+        ...allInputFiltered,
+        input: results,
+      });
     } catch (e) {
       setError(e);
     } finally {
@@ -34,6 +39,7 @@ function FetchProvider({ children }) {
       value={ { isLoading,
         resultsApi,
         apiError,
+        allInputFiltered,
         fetchStarWarsApi } }
     >
       { children }
