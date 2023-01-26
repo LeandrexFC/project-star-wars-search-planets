@@ -7,8 +7,8 @@ function FetchProvider({ children }) {
   const [isLoading, setisLoading] = useState(false);
   const [resultsApi, setResults] = useState([]);
   const [apiError, setError] = useState(null);
-  const [allInputFiltered, setInput] = useState({ input: [] });
-  const [planets, setPlanets] = useState([]);
+  // const [allInputFiltered, setInput] = useState({ input: [] });
+  const [planets, setPlanets] = useState({ planet: [] });
 
   const fetchStarWarsApi = async () => {
     setisLoading(true);
@@ -24,12 +24,11 @@ function FetchProvider({ children }) {
       const returnApi = await request.json();
       const { results } = returnApi;
       setResults(results);
-      setInput({
-        ...allInputFiltered,
-        input: results,
-      });
 
-      setPlanets(results);
+      setPlanets({
+        ...planets,
+        planet: results,
+      });
     } catch (e) {
       setError(e);
     } finally {
@@ -50,7 +49,6 @@ function FetchProvider({ children }) {
       value={ { isLoading,
         resultsApi,
         apiError,
-        allInputFiltered,
         planets,
         setPlanets } }
     >

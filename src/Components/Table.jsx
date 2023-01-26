@@ -1,55 +1,42 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FetchContext } from '../context/FetchContext';
 
 function Table() {
   const { resultsApi, isLoading, planets, setPlanets } = useContext(FetchContext);
 
-  // const [inputSearch, setSearch] = useState('');
-  // const [allInputFilteredd, setInput] = useState({ input: '' });
-  const [filtered, setFilter] = useState({ search: '',
+  const [inputSearch, setSearch] = useState('');
+  const [filtered, setFilter] = useState({
     column: 'population',
     operator: 'maior que',
     number: '0' });
 
-  // const filteredInputSearch = allInputFiltered.input.filter((result) => result.name
-  //   .includes(filteredSearch));
-
-  // useEffect(() => {
-  //   setPlanets({
-  //     ...planets,
-  //     planet: resultsApi,
-  //   });
-  // }, []);
-
-  useEffect(() => {
-    const planetsFiltered = planets.filter((result) => result.name
-      .includes(filtered.search));
-
-    setPlanets(planetsFiltered);
-  }, [filtered.search]);
-
-  // useEffect(() => {
-  //    planets.filter(())
-  // }, [filtered]);
+  const filteredInputSearch = planets.planet.filter((result) => result.name
+    .includes(inputSearch));
 
   const handleAllInputs = () => {
     if (filtered.operator === 'menor que') {
       const allResult = resultsApi
         .filter((result) => +result[filtered.column]
         < +filtered.number);
-      setPlanets(allResult);
+      setPlanets({
+        planet: allResult,
+      });
     } else if
     (filtered.operator === 'maior que') {
       const allResult2 = resultsApi
         .filter((result) => +result[filtered.column]
         > +filtered.number);
-      setPlanets(allResult2);
+      setPlanets({
+        planet: allResult2,
+      });
     } else if
     (filtered.operator === 'igual a') {
       const allResult3 = resultsApi
         .filter((results) => +results[filtered.column]
         === +filtered.number);
-      setPlanets(allResult3);
+      setPlanets({
+        planet: allResult3,
+      });
     }
   };
 
@@ -59,8 +46,8 @@ function Table() {
         type="text"
         data-testid="name-filter"
         name="search"
-        value={ filtered.search }
-        onChange={ (e) => setFilter({ ...filtered, search: e.target.value }) }
+        value={ inputSearch }
+        onChange={ (e) => setSearch(e.target.value) }
       />
       <div>
         Coluna:
@@ -118,7 +105,7 @@ function Table() {
         </thead>
         <tbody>
           {
-            isLoading ? <p>Carregando...</p> : planets.map((filter) => (
+            isLoading ? <p>Carregando...</p> : filteredInputSearch.map((filter) => (
               <tr key={ filter.name }>
                 <td>
                   { filter.name }
