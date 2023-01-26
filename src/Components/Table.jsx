@@ -1,64 +1,55 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FetchContext } from '../context/FetchContext';
 
 function Table() {
-  const { resultsApi, fetchStarWarsApi, isLoading,
-    allInputFiltered } = useContext(FetchContext);
-  const [filteredSearch, setFilteredSearch] = useState('');
-  const [filteredColumn, setColumn] = useState('population');
-  const [filteredEqual, setEqual] = useState('maior que');
-  const [filterNumber, setNumber] = useState({ filteredNumber: '0' });
-  const [allInputFilteredd, setInput] = useState({ input: '' });
+  const { resultsApi, isLoading, planets, setPlanets } = useContext(FetchContext);
 
-  const filteredInputSearch = allInputFiltered.input.filter((result) => result.name
-    .includes(filteredSearch));
+  // const [inputSearch, setSearch] = useState('');
+  // const [allInputFilteredd, setInput] = useState({ input: '' });
+  const [filtered, setFilter] = useState({ search: '',
+    column: 'population',
+    operator: 'maior que',
+    number: '0' });
+
+  // const filteredInputSearch = allInputFiltered.input.filter((result) => result.name
+  //   .includes(filteredSearch));
+
+  // useEffect(() => {
+  //   setPlanets({
+  //     ...planets,
+  //     planet: resultsApi,
+  //   });
+  // }, []);
 
   useEffect(() => {
-    const callApi = async () => {
-      await fetchStarWarsApi();
-    };
+    const planetsFiltered = planets.filter((result) => result.name
+      .includes(filtered.search));
 
-    callApi();
-  }, []);
+    setPlanets(planetsFiltered);
+  }, [filtered.search]);
 
-  const handleNumberInput = (e) => {
-    const { name, value } = e.target;
-    setNumber({
-      ...filterNumber,
-      [name]: value,
-    });
-  };
+  // useEffect(() => {
+  //    planets.filter(())
+  // }, [filtered]);
 
   const handleAllInputs = () => {
-    if (filteredEqual === 'menor que') {
+    if (filtered.operator === 'menor que') {
       const allResult = resultsApi
-        .filter((result) => result[filteredColumn]
-        < filterNumber.filteredNumber)
-        .map((result) => result);
-      setInput({
-        ...allInputFilteredd,
-        input: allResult,
-      });
+        .filter((result) => +result[filtered.column]
+        < +filtered.number);
+      setPlanets(allResult);
     } else if
-    (filteredEqual === 'maior que') {
+    (filtered.operator === 'maior que') {
       const allResult2 = resultsApi
-        .filter((result) => result[filteredColumn]
-        > filterNumber.filteredNumber)
-        .map((result) => result);
-      setInput({
-        ...allInputFilteredd,
-        input: allResult2,
-      });
+        .filter((result) => +result[filtered.column]
+        > +filtered.number);
+      setPlanets(allResult2);
     } else if
-    (filteredEqual === 'igual a') {
+    (filtered.operator === 'igual a') {
       const allResult3 = resultsApi
-        .filter((results) => results[filteredColumn]
-        === filterNumber.filteredNumber)
-        .map((result) => result);
-      setInput({
-        ...allInputFilteredd,
-        input: allResult3,
-      });
+        .filter((results) => +results[filtered.column]
+        === +filtered.number);
+      setPlanets(allResult3);
     }
   };
 
@@ -68,14 +59,16 @@ function Table() {
         type="text"
         data-testid="name-filter"
         name="search"
-        onChange={ (e) => setFilteredSearch(e.target.value) }
+        value={ filtered.search }
+        onChange={ (e) => setFilter({ ...filtered, search: e.target.value }) }
       />
       <div>
         Coluna:
         <select
           name="selectedOption"
           data-testid="column-filter"
-          onChange={ (e) => setColumn(e.target.value) }
+          value={ filtered.column }
+          onChange={ (e) => setFilter({ ...filtered, column: e.target.value }) }
         >
           <option value="population">population</option>
           <option value="orbital_period">orbital_period</option>
@@ -87,7 +80,8 @@ function Table() {
         <select
           name="selectEqual"
           data-testid="comparison-filter"
-          onChange={ (e) => setEqual(e.target.value) }
+          value={ filtered.operator }
+          onChange={ (e) => setFilter({ ...filtered, operator: e.target.value }) }
         >
           <option value="maior que">maior que</option>
           <option value="menor que">menor que</option>
@@ -97,8 +91,8 @@ function Table() {
           name="filteredNumber"
           type="number"
           data-testid="value-filter"
-          onChange={ handleNumberInput }
-          value={ filterNumber.filteredNumber }
+          value={ filtered.number }
+          onChange={ (e) => setFilter({ ...filtered, number: e.target.value }) }
         />
         <button type="button" data-testid="button-filter" onClick={ handleAllInputs }>
           Filtrar
@@ -124,7 +118,7 @@ function Table() {
         </thead>
         <tbody>
           {
-            isLoading ? <p>Carregando...</p> : filteredInputSearch.map((filter) => (
+            isLoading ? <p>Carregando...</p> : planets.map((filter) => (
               <tr key={ filter.name }>
                 <td>
                   { filter.name }

@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 export const FetchContext = createContext();
@@ -8,6 +8,7 @@ function FetchProvider({ children }) {
   const [resultsApi, setResults] = useState([]);
   const [apiError, setError] = useState(null);
   const [allInputFiltered, setInput] = useState({ input: [] });
+  const [planets, setPlanets] = useState([]);
 
   const fetchStarWarsApi = async () => {
     setisLoading(true);
@@ -27,6 +28,8 @@ function FetchProvider({ children }) {
         ...allInputFiltered,
         input: results,
       });
+
+      setPlanets(results);
     } catch (e) {
       setError(e);
     } finally {
@@ -34,13 +37,22 @@ function FetchProvider({ children }) {
     }
   };
 
+  useEffect(() => {
+    const callApi = async () => {
+      await fetchStarWarsApi();
+    };
+
+    callApi();
+  }, []);
+
   return (
     <FetchContext.Provider
       value={ { isLoading,
         resultsApi,
         apiError,
         allInputFiltered,
-        fetchStarWarsApi } }
+        planets,
+        setPlanets } }
     >
       { children }
     </FetchContext.Provider>
