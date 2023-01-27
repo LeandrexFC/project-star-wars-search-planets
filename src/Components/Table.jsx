@@ -55,7 +55,6 @@ function Table() {
         type="text"
         data-testid="name-filter"
         name="search"
-        // value={ filtered.search }
         onChange={ (e) => setSearch(e.target.value) }
       />
       <div>
@@ -64,6 +63,7 @@ function Table() {
           name="selectedOption"
           data-testid="column-filter"
           value={ filtered.column }
+          id="selectColumn"
           onChange={ (e) => setFilter({ ...filtered, column: e.target.value }) }
         >
 
@@ -74,12 +74,6 @@ function Table() {
               </option>
             ))
           }
-
-          {/* <option value="population">{ allColumns[0] }</option>
-          <option value="orbital_period">{ allColumns[1] }</option>
-          <option value="diameter">{ allColumns[2] }</option>
-          <option value="rotation_period">{ allColumns[3] }</option>
-          <option value="surface_water">{ allColumns[4] }</option> */}
 
         </select>
         Operador:

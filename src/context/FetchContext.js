@@ -7,7 +7,6 @@ function FetchProvider({ children }) {
   const [isLoading, setisLoading] = useState(false);
   const [resultsApi, setResults] = useState([]);
   const [apiError, setError] = useState(null);
-  // const [allInputFiltered, setInput] = useState({ input: [] });
   const [planets, setPlanets] = useState({ planet: [] });
 
   const fetchStarWarsApi = async () => {
