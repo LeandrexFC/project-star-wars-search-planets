@@ -10,9 +10,11 @@ function Table() {
     operator: 'maior que',
     number: '0' });
 
-  const [allColumns, setColumns] = useState(['population', 'orbital_period', 'diameter',
-    'rotation_period',
-    'surface_water']);
+  const [allColumns, setColumns] = useState(['surface_water', 'rotation_period',
+    'orbital_period',
+    'diameter',
+    'population',
+  ]);
 
   const filteredInputSearch = planets.planet.filter((result) => result.name
     .includes(inputSearch));
