@@ -10,10 +10,17 @@ function Table() {
     operator: 'maior que',
     number: '0' });
 
+  const [allColumns, setColumns] = useState(['population', 'orbital_period', 'diameter',
+    'rotation_period',
+    'surface_water']);
+
   const filteredInputSearch = planets.planet.filter((result) => result.name
     .includes(inputSearch));
 
-  const handleAllInputs = () => {
+  const handleAllInputs = (e) => {
+    const test = allColumns.filter((column) => column !== e.target.value);
+    setColumns(test);
+
     if (filtered.operator === 'menor que') {
       const allResult = planets.planet
         .filter((result) => +result[filtered.column]
@@ -57,11 +64,21 @@ function Table() {
           value={ filtered.column }
           onChange={ (e) => setFilter({ ...filtered, column: e.target.value }) }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+
+          {
+            allColumns.map((result) => (
+              <option key={ result } value={ result }>
+                { result }
+              </option>
+            ))
+          }
+
+          {/* <option value="population">{ allColumns[0] }</option>
+          <option value="orbital_period">{ allColumns[1] }</option>
+          <option value="diameter">{ allColumns[2] }</option>
+          <option value="rotation_period">{ allColumns[3] }</option>
+          <option value="surface_water">{ allColumns[4] }</option> */}
+
         </select>
         Operador:
         <select
@@ -81,7 +98,12 @@ function Table() {
           value={ filtered.number }
           onChange={ (e) => setFilter({ ...filtered, number: e.target.value }) }
         />
-        <button type="button" data-testid="button-filter" onClick={ handleAllInputs }>
+        <button
+          type="button"
+          data-testid="button-filter"
+          onClick={ handleAllInputs }
+          value={ filtered.column }
+        >
           Filtrar
         </button>
       </div>
