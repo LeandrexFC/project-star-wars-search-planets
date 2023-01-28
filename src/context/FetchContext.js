@@ -57,7 +57,7 @@ function FetchProvider({ children }) {
 }
 
 FetchProvider.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default FetchProvider;
