@@ -205,8 +205,38 @@ describe('Tests Aplication StarWars', () => {
           const table = screen.getAllByRole('row');
           expect(table.length).toBe(1);
         });
-     
-  
     });
-  
+    it('test orderFilter', async () => {
+      render(
+        <FetchProvider>
+          <App />
+        </FetchProvider>
+      );
+      const loading = screen.getByText('Carregando...')
+      await waitForElementToBeRemoved(loading)
+
+      const orderColumn = screen.getByText(/ordenar:/i);
+      expect(orderColumn).toBeInTheDocument()
+
+      const orderRadio = screen.getByTestId('column-sort');
+      expect(orderRadio.value).toBe('population')
+      
+      userEvent.selectOptions(orderRadio, 'rotation_period');
+      expect(orderRadio.value).toBe('rotation_period');
+
+      const asc = screen.getByTestId('column-sort-input-asc')
+      const desc = screen.getByTestId('column-sort-input-desc')
+
+      userEvent.click(asc)
+
+      expect(asc).toBeChecked()
+      expect(desc).not.toBeChecked()
+      
+      const btn = screen.getByRole('button', {
+        name: /ordenar/i
+      })
+
+      userEvent.click(btn)
+
+    })
 });
