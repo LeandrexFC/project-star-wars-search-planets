@@ -3,20 +3,24 @@ import { FetchContext } from '../context/FetchContext';
 
 const num = -1;
 function Table() {
-  const { isLoading, planets, setPlanets } = useContext(FetchContext);
+  const { planets, setPlanets, isLoading } = useContext(FetchContext);
   const [inputSearch, setSearch] = useState('');
   const [filtered, setFilter] = useState({
     column: 'population',
     operator: 'maior que',
     number: '0' });
+
   const [allColumns, setColumns] = useState(['surface_water', 'rotation_period',
     'orbital_period',
     'diameter', 'population',
   ]);
+
   const [orderColumn, setOrderColumns] = useState({
     column: 'population', sort: 'ASC' });
+
   const filteredInputSearch = planets.planet.filter((result) => result.name
     .includes(inputSearch));
+
   const handleAllInputs = (e) => {
     const test = allColumns.filter((column) => column !== e.target.value);
     setColumns(test);
@@ -169,7 +173,7 @@ function Table() {
           </button>
         </div>
       </div>
-      <table>
+      <table id="table-total">
         <thead>
           <tr>
             <th>Name </th>
@@ -189,57 +193,50 @@ function Table() {
         </thead>
         <tbody>
           {
-            isLoading ? <h1>Carregando...</h1> : filteredInputSearch.map((filter) => (
-              <tr key={ filter.name }>
-                <td data-testid="planet-name">
-                  { filter.name}
-                </td>
-                <td>
-                  { filter.rotation_period }
-                </td>
-                <td>
-                  { filter.orbital_period }
-                </td>
-                <td>
-                  { filter.diameter }
-                </td>
-                <td>
-                  { filter.climate }
-                </td>
-
-                <td>
-                  { filter.gravity }
-                </td>
-
-                <td>
-                  { filter.terrain }
-                </td>
-
-                <td>
-                  { filter.surface_water }
-                </td>
-
-                <td>
-                  { filter.population }
-                </td>
-
-                <td>
-                  { filter.films.map((film) => film) }
-                </td>
-
-                <td>
-                  { filter.created }
-                </td>
-
-                <td>
-                  { filter.edited }
-                </td>
-
-                <td>
-                  { filter.url }
-                </td>
-              </tr>
-            ))
+            isLoading ? <h1 data-testid="load">Carregando...</h1> : filteredInputSearch
+              .map((filter) => (
+                <tr key={ filter.name } className="table">
+                  <td data-testid="planet-name">
+                    { filter.name}
+                  </td>
+                  <td>
+                    { filter.rotation_period }
+                  </td>
+                  <td>
+                    { filter.orbital_period }
+                  </td>
+                  <td>
+                    { filter.diameter }
+                  </td>
+                  <td>
+                    { filter.climate }
+                  </td>
+                  <td>
+                    { filter.gravity }
+                  </td>
+                  <td>
+                    { filter.terrain }
+                  </td>
+                  <td>
+                    { filter.surface_water }
+                  </td>
+                  <td>
+                    { filter.population }
+                  </td>
+                  <td>
+                    { filter.films.map((film) => film) }
+                  </td>
+                  <td>
+                    { filter.created }
+                  </td>
+                  <td>
+                    { filter.edited }
+                  </td>
+                  <td>
+                    { filter.url }
+                  </td>
+                </tr>
+              ))
           }
         </tbody>
       </table>
