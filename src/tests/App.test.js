@@ -198,7 +198,7 @@ describe('Tests Aplication StarWars', () => {
         userEvent.selectOptions(column, 'diameter')
         expect(column.value).toBe('diameter')
 
-        await waitFor(async () => {
+        await waitFor( () => {
           
 
         const comparison = screen.getByTestId('comparison-filter')
